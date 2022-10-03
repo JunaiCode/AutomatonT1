@@ -322,20 +322,37 @@ if(type == 'Mealy'){
         }
     }
       }
+      console.log(partition1);
       return partition1;
 }
 
 function minimizer(pk){
+    let partition = [];
     if(pk == automaton.partition){
         return pk;
     }
     else{
-
+        for (let i = 0; i < pk.length; i++) {
+            let auxArray = [];
+            for (let j = 0; j < pk[i].length; j++) {
+                
+                for (let k = 0; k < pk[i][j].outputState.length; k++) {
+                    aux = 0;
+                    for (let l = 0; l < pk.length; l++) {
+                    if(pk[l].includes(pk[i][j].outputState[k])){
+                        aux++;
+                    }
+                }
+                    if(aux == pk[i][j].outputState.length){
+                    auxArray.push(pk[i][j]);
+                    s}
+            }
+        }
+        partition.push(auxArray);
+    }
     }
         automaton.partition = partition;
-        return minimizer(partition);
     }
-
 
 document.addEventListener("click",(e)=>{
     eventData();
@@ -361,6 +378,6 @@ document.addEventListener("click",(e)=>{
     if(e.target.matches('.minimizer')){
        createAutomata();
        automataConexo();
-       minimizer(initialPartition());
+       initialPartition();
     }
 })
