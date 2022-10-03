@@ -1,0 +1,20 @@
+.table,td,th{
+    border: thin solid black;
+    margin: 2rem auto;
+}
+
+.display-none{
+    display: none;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons>*{
+ margin: 1rem 1rem;
+}
