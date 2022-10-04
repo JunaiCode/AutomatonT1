@@ -18,3 +18,8 @@
 .buttons>*{
  margin: 1rem 1rem;
 }
+
+h1,h2{
+    margin: 0 auto;
+    text-align: center;
+}

@@ -106,6 +106,7 @@ function addSimbol(){
     }
 }
 
+/** hide buttons in the ui */
 function hideButtons(hide1,hide2,show1,show2){
     const $hide1 = document.querySelector(`${hide1}`),
     $hide2 = document.querySelector(`${hide2}`),
@@ -117,6 +118,7 @@ function hideButtons(hide1,hide2,show1,show2){
     $show2.classList.remove('display-none');
 }
 
+/**event to the cells of the table */
 function eventData(){
     const th = document.querySelector('.tr-th');
     for (let i = 0; i < numStates; i++) {
@@ -134,6 +136,7 @@ function eventData(){
     }
 }
 
+/**create the automata with the table */
 function createAutomata(){
     const th = document.querySelector('.tr-th');
     let name;
@@ -222,6 +225,7 @@ else{
     getOutputsMoore();
 }
 
+/** get the related automaton of an automaton */
 function automataConexo(){
     /**Quitar inaccesibles */
     let aux = [];
@@ -261,6 +265,7 @@ function automataConexo(){
     automaton.states = result;
 }
 
+/**function to compare two arrays */
 Array.prototype.equals = function (getArray) {
     if (this.length != getArray.length) return false;
   
@@ -274,6 +279,7 @@ Array.prototype.equals = function (getArray) {
     return true;
   };
 
+  /**get the outputs of the moore machine */
 function getOutputsMoore(){
     for (let i = 0; i < automaton.states.length; i++) {
         for (let j = 0; j < automaton.states[i].outputState.length; j++) {
@@ -284,6 +290,7 @@ function getOutputsMoore(){
         }
 }
 
+/** Give me the first partition watching the outputs */
 function initialPartition(){
 let partition1=[];
 if(type == 'Mealy'){
@@ -322,36 +329,71 @@ if(type == 'Mealy'){
         }
     }
       }
-      console.log(partition1);
+      const $h2 = document.querySelector('h2');
+      let tostring = []
+      for (let i = 0; i < partition1.length; i++) {
+        let aux = [];
+       for (let j = 0; j < partition1[i].length; j++) {
+            aux.push(partition1[i][j].name);
+        }
+        tostring.push(aux);
+      }
+      console.log(tostring);
+      let string='[';
+      for (let i = 0; i < tostring.length; i++) {
+        if(i == tostring.length -1 ){
+         string=string+tostring[i]+']';
+        }else{
+         string=string+tostring[i]+']'+'[';
+        }
+      }
+      $h2.innerHTML = `P1=[${string}]`;
       return partition1;
 }
 
+/**Function to reduce the automaton */
 function minimizer(pk){
     let partition = [];
     if(pk == automaton.partition){
         return pk;
     }
     else{
+        console.log(pk);
         for (let i = 0; i < pk.length; i++) {
             let auxArray = [];
-            for (let j = 0; j < pk[i].length; j++) {
-                
-                for (let k = 0; k < pk[i][j].outputState.length; k++) {
-                    aux = 0;
-                    for (let l = 0; l < pk.length; l++) {
-                    if(pk[l].includes(pk[i][j].outputState[k])){
-                        aux++;
-                    }
-                }
-                    if(aux == pk[i][j].outputState.length){
-                    auxArray.push(pk[i][j]);
-                    s}
+            for (let j = 0; j < pk.length; j++) {
+                for (let k = 0; k < pk[i].length; k++) {
+                    let aux = 0;
+                    for (let l = 0; l < pk[i].length; l++) {
+                        for (let m = 0; m < pk[i][k].outputState.length; m++) {
+                            if(pk[j].includes(pk[i][k].outputState[m]) &&
+                               pk[j].includes(pk[i][l].outputState[m])){
+                                aux++;
+                               }
+                        }
+                        if(aux == pk[i][k].outputState.length){
+                            auxArray.push(pk[i][k]);
+                            }
+                } 
             }
-        }
+            }
         partition.push(auxArray);
     }
     }
-        automaton.partition = partition;
+        console.log(partition);
+        const partitionResult = [];
+        for (let i = 0; i < partition.length; i++) {
+            const result = [];
+            partition[i].forEach((item)=>{
+            //pushes only unique element
+            if(!result.includes(item)){
+            result.push(item);
+    }
+    }  
+    )
+        partitionResult.push(result);}
+        console.log(partitionResult);
+        automaton.partition = partitionResult;
     }
 
 document.addEventListener("click",(e)=>{
@@ -378,6 +420,6 @@ document.addEventListener("click",(e)=>{
     if(e.target.matches('.minimizer')){
        createAutomata();
        automataConexo();
-       initialPartition();
+       minimizer(initialPartition());
     }
 })
